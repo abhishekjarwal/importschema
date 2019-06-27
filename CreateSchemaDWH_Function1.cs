@@ -93,14 +93,15 @@ namespace CreateSchemaDWH
             StringBuilder sbSQL_Create_command = new StringBuilder();
             //string command = string.Empty;//create dynamically
             string[] _splitcolumns = listofcolumn.Split(',');
-            string Col_datatype_size = "NVARCHAR(2000)";
+            string Col_datatype_size = "NVARCHAR(3000)";
+            sbSQL_Create_command.Append($"IF EXISTS(SELECT name FROM sys.tables WHERE Name = N'{_tablename}') BEGIN")
             sbSQL_Create_command.Append("CREATE TABLE " + _tablename + "(");
             for (int i = 0; i < _splitcolumns.Length; i++)
             {
                 sbSQL_Create_command.Append(_splitcolumns[i] + " " + Col_datatype_size + ",");
             }
             sbSQL_Create_command.Remove(sbSQL_Create_command.Length - 1, 1);
-            sbSQL_Create_command.Append(")");
+            sbSQL_Create_command.Append(") END");
             SqlConnection connection = new SqlConnection(DWHconnectionString);
             connection.Open();
 
